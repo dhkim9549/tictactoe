@@ -62,9 +62,12 @@ function init() {
     squares[s].addEventListener(down, function(evt){squareSelected(evt, getCurrentPlayer());}, false);
   }
   
-  /* create the board and set the initial player */
-  createBoard();
   setInitialPlayer();
+  newGame();
+  
+  /* create the board and set the initial player */
+  //createBoard();
+  //setInitialPlayer();
 }
 
 
@@ -75,23 +78,10 @@ function createBoard() {
 
   document.getElementById('display').innerHTML = ""
   
-  /* create a board from the stored version, if a stored version exists */
-  if (window.localStorage && localStorage.getItem('tic-tac-toe-board')) {
-    
-    /* parse the string that represents our playing board to an array */
-    board = (JSON.parse(localStorage.getItem('tic-tac-toe-board')));
-    for (var i = 0; i < board.length; i++) {
-      if (board[i] != "") {
-        fillSquareWithMarker(document.getElementById(i), board[i]);
-      }
-    }
-  }
-  /* otherwise, create a clean board */
-  else {  
-    for (var i = 0; i < board.length; i++) {
-      board[i] = "";                               
-      document.getElementById(i).innerHTML = "";
-    }
+  /* create a clean board */
+  for (var i = 0; i < board.length; i++) {
+    board[i] = "";                               
+    document.getElementById(i).innerHTML = "";
   }
 }
 
@@ -121,7 +111,10 @@ function squareSelected(evt, currentPlayer) {
     checkForWinner();
     switchPlayers(); 
 	
-  	ajaxGo();
+  /* if the board is not full, let AI select a move */
+  if (JSON.stringify(board).match(/,"",/)) {
+    ajaxGo();
+  }
 }
 
 /*** call this function when AI places a move ***/
@@ -133,6 +126,7 @@ function squareSelectedAI(move, currentPlayer) {
   switchPlayers(); 
 }
 
+/*** call bada.ai for the AI's move ***/
 function ajaxGo() {
   
   // Query AI for the move.
@@ -174,13 +168,6 @@ function fillSquareWithMarker(square, player) {
 /*** update our array which tracks the state of the board, and write the current state to local storage ***/
 function updateBoard(index, marker) {
   board[index] = marker;
-  
-  /* HTML5 localStorage only allows storage of strings - convert our array to a string */
-  var boardstring = JSON.stringify(board);
-
-  /* store this string to localStorage, along with the last player who marked a square */
-  localStorage.setItem('tic-tac-toe-board', boardstring); 
-  localStorage.setItem('last-player', getCurrentPlayer());
 }
 
 
@@ -249,7 +236,12 @@ function checkForWinner() {
 /* utilities for getting the current player, switching players, and creating a new game */
 /****************************************************************************************/
 function getCurrentPlayer() {
-  return document.querySelector(".current-player").id;
+  var p = document.querySelector(".current-player");
+  if(p == null) {
+    return "";
+  } else {
+    return document.querySelector(".current-player").id;
+  }
 }
 
 /* set the initial player, when starting a whole new game or restoring the game state when the page is revisited */
@@ -259,13 +251,7 @@ function setInitialPlayer() {
   playerX.className = "";
   playerO.className = "";
     
-  /* if there's no localStorage, or no last-player stored in localStorage, always set the first player to X by default */
-  if (!window.localStorage || !localStorage.getItem('last-player')) {
-    playerX.className = "current-player";
-    return;
-  } 
-
-  var lastPlayer = localStorage.getItem('last-player');  
+  var lastPlayer = getCurrentPlayer();
   if (lastPlayer == 'X') {
     playerO.className = "current-player";
   }
@@ -289,9 +275,6 @@ function switchPlayers() {
 }
 
 function newGame() {  
-  /* clear the currently stored game out of local storage */
-  localStorage.removeItem('tic-tac-toe-board');
-  localStorage.removeItem('last-player');
   
   /* create a new game */
   createBoard();
