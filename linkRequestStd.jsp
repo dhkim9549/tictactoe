@@ -12,6 +12,7 @@
   try {
 		look_up = (RMIInterface)Naming.lookup("//bada.ai/MyServer");
 		a += look_up.helloTo(boardJsonStr);
+		Thread.sleep(1000);
 	} catch(Exception ex){
 		a += ex;
 	}

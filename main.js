@@ -73,6 +73,8 @@ function init() {
 /****************************************************************************************/
 function createBoard() {
 
+  document.getElementById('display').innerHTML = ""
+  
   /* create a board from the stored version, if a stored version exists */
   if (window.localStorage && localStorage.getItem('tic-tac-toe-board')) {
     
@@ -96,20 +98,30 @@ function createBoard() {
 /*** call this function whenever a square is clicked or tapped ***/
 function squareSelected(evt, currentPlayer) {
   var square = evt.target;
+  
+  if(document.getElementById('display').innerHTML != "") {
+    alert("Sorry, the game is over.");
+	return;
+  }
+  
   /* check to see if the square already contains an X or O marker */
   if (square.className.match(/marker/)) {
-    alert("Sorry, that space is taken!  Please choose another square.");
+    alert("Sorry, that space is taken! Please choose another square.");
     return;
   }
+
+  if(getCurrentPlayer() == 'X') {
+    alert("Sorry, it's AI's turn! Please wait.");
+	return;
+  }
+
   /* if not already marked, mark the square, update the array that tracks our board, check for a winner, and switch players */
-  else {
     fillSquareWithMarker(square, currentPlayer);
     updateBoard(square.id, currentPlayer);
     checkForWinner();
     switchPlayers(); 
 	
   	ajaxGo();
-  }
 }
 
 /*** call this function when AI places a move ***/
@@ -123,13 +135,6 @@ function squareSelectedAI(move, currentPlayer) {
 
 function ajaxGo() {
   
-  alert("getCurrentPlayer() = " + getCurrentPlayer());
-  
-  // AI is X
-  if(getCurrentPlayer() != "X") {
-    return;
-  }
-  
   // Query AI for the move.
   var boardObj = new Object();
   boardObj.board = board;
@@ -142,11 +147,10 @@ function ajaxGo() {
 			board: JSON.stringify(boardObj)
 		},
 		datatype: "JSON",
-    async: false,
+		async: true,
 		success: function(obj) {
-     	var data = JSON.parse(obj);
+			var data = JSON.parse(obj);
 			console.log(obj);
-			alert("a = " + data.a);
 			// Select AI's move
 			squareSelectedAI(data.a, getCurrentPlayer())
 		},
@@ -189,8 +193,11 @@ function updateBoard(index, marker) {
   6 7 8
 */
 function declareWinner() {
-  if (confirm("We have a winner!  New game?")) {
-    newGame();
+  var display = document.getElementById('display');
+  if(getCurrentPlayer() == 'X') {
+    display.innerHTML = "AI win!"
+  } else if(getCurrentPlayer() == 'O') {
+    display.innerHTML = "Human win!"
   }
 }
 
@@ -233,9 +240,7 @@ function checkForWinner() {
   
   /* if there's no winner but the board is full, ask the user if they want to start a new game */
   if (!JSON.stringify(board).match(/,"",/)) {
-    if (confirm("It's a draw. New game?")) {
-      newGame();
-    }
+    document.getElementById('display').innerHTML = "It's a draw."
   }
 }
 
@@ -291,7 +296,9 @@ function newGame() {
   /* create a new game */
   createBoard();
   
-  ajaxGo();
+  if(getCurrentPlayer() == 'X') {
+    ajaxGo();
+  }
 }
 
 
