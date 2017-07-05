@@ -1,0 +1,47 @@
+<title>
+bada.ai Tic Tac Toe Methods
+</title>
+
+<h2>bada.ai Tic Tac Toe</h2>
+
+<h3>Methods</h3>
+
+<p>An open source deep learning framework <a href="https://deeplearning4j.org">DL4J</a> was used to train a nueral network.</p>
+
+<h4>Model architecture</h4>
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">A multilayer perceptron (MLP)</a> was used.
+The input to the neural network consists of 9 &times; 3 nodes, followed by two hidded layers with two outputs. Each hidden layer also consists of 9 &times; 3 nodes.
+</p>
+
+<h4>Training details</h4>
+
+<p>
+Stochastic Gradient Descent algorithm with minibatches of size 16 were used.
+The behaviour policy during training was &epsilon;-greedy with &epsilon; annealed linearly from 1.0 to 0.1.
+over the first 90,000 games, and fixed at 0.1 thereafter.
+</p>
+
+<p>
+Three planes were used for the input features for the neural network, each plane describing player mark, opponent mark, and empty.
+</p>
+
+<h4>Reinforcement learning</h4>
+
+<p>
+The AI agent played games against an opponent which places moves 100% randomly.
+After playing about 5 million games against the opponent, the AI agent reached the human expert level.
+</p>
+
+<h4>Code availability</h4>
+The source code can be accessed at <a href="https://github.com/dhkim9549/mlptictactoe">https://github.com/dhkim9549/mlptictactoe</a>.<br>
+The user interface source code can be found at <a href="https://github.com/dhkim9549/tictactoe">https://github.com/dhkim9549/tictactoe</a>.
+
+<h4>Author Information</h4>
+Readers are welcome to comment on this blog.
+Correspondence and requests for materials should be addressed to Dong-Hyun Kim (dhkim95@hotmail.com).
+<hr>
+
+<p>Copyright &copy; 2017. <i>Dong-Hyun Kim</i> bada.ai is licensed Apache 2.0.</p>
+

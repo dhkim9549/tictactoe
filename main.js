@@ -182,7 +182,7 @@ function updateBoard(index, marker) {
 function declareWinner() {
   var display = document.getElementById('display');
   if(getCurrentPlayer() == 'X') {
-    display.innerHTML = "AI win!"
+    display.innerHTML = "bada.AI win!"
   } else if(getCurrentPlayer() == 'O') {
     display.innerHTML = "Human win!"
   }
