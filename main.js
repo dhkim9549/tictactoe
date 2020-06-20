@@ -136,15 +136,15 @@ function ajaxGo() {
   
 	jQuery.ajax({
 		type: "GET",
-		url: "linkRequestStd.jsp",
+		url: "/greeting",
 		data: {
 			board: JSON.stringify(boardObj)
 		},
 		datatype: "JSON",
 		async: true,
 		success: function(obj) {
-			var data = JSON.parse(obj);
 			console.log(obj);
+                        var data = JSON.parse(obj);
 			// Select AI's move
 			squareSelectedAI(data.a, getCurrentPlayer())
 		},
