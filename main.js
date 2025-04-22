@@ -202,7 +202,7 @@ function checkForWinner() {
   var a = 0; var b = 1; var c = 2;
   while (c < board.length) {
     if (weHaveAWinner(a, b, c)) {
-      return;
+      return 1;
     }
     a+=3; b+=3; c+=3;
   }
@@ -211,7 +211,7 @@ function checkForWinner() {
   a = 0; b = 3; c = 6;
   while (c < board.length) {
     if (weHaveAWinner(a, b, c)) {
-      return;
+      return 1;
     }
     a+=1; b+=1; c+=1;
   }
