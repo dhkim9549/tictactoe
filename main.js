@@ -108,11 +108,11 @@ function squareSelected(evt, currentPlayer) {
   /* if not already marked, mark the square, update the array that tracks our board, check for a winner, and switch players */
     fillSquareWithMarker(square, currentPlayer);
     updateBoard(square.id, currentPlayer);
-    checkForWinner();
+    let rslt = checkForWinner();
     switchPlayers(); 
 	
   /* if the board is not full, let AI select a move */
-  if (JSON.stringify(board).match(/,"",/)) {
+  if (rslt == 0) {
     ajaxGo();
   }
 }
@@ -218,17 +218,29 @@ function checkForWinner() {
 
   /* check diagonal right */
   if (weHaveAWinner(0, 4, 8)) {
-    return;
+    return 1;
   }
   /* check diagonal left */
   if (weHaveAWinner(2, 4, 6)) {
-    return;
+    return 1;
   }
   
   /* if there's no winner but the board is full, ask the user if they want to start a new game */
-  if (!JSON.stringify(board).match(/,"",/)) {
+  if (getStrBoard().length == 9) {
     document.getElementById('display').innerHTML = "It's a draw."
+    return 1;
   }
+
+  return 0;
+}
+
+function getStrBoard() {
+  let strBoard = '';
+  board.forEach((e) => {
+    strBoard += e;
+  });
+  console.log({strBoard});
+  return strBoard;
 }
 
 
